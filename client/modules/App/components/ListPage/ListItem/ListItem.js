@@ -4,9 +4,21 @@ import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 // Import Style
-import styles from './PostListItem.css';
+import styles from './ListItem.css';
+import { elementTypes } from '../../../../../elementTypes';
 
-function PostListItem(props) {
+function ListItem(props) {
+  let deleteMessageId;
+  switch (props.listType) {
+    case elementTypes.COMMENT:
+      deleteMessageId = 'deleteComment';
+      break;
+    case elementTypes.POST:
+      deleteMessageId = 'deletePost';
+      break;
+    default:
+  }
+
   return (
     <div className={styles['single-post']}>
       <h3 className={styles['post-title']}>
@@ -16,21 +28,24 @@ function PostListItem(props) {
       </h3>
       <p className={styles['author-name']}><FormattedMessage id="by" /> {props.post.name}</p>
       <p className={styles['post-desc']}>{props.post.content}</p>
-      <p className={styles['post-action']}><a href="#" onClick={props.onDelete}><FormattedMessage id="deletePost" /></a></p>
+      <p className={styles['post-action']}><a href="#" onClick={props.onDelete}><FormattedMessage id={deleteMessageId} /></a></p>
       <hr className={styles.divider} />
     </div>
   );
 }
 
-PostListItem.propTypes = {
+ListItem.propTypes = {
   post: PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     slug: PropTypes.string.isRequired,
-    cuid: PropTypes.string.isRequired,
+    cuid: PropTypes.string,
+    commentCuid: PropTypes.string,
+    postCuid: PropTypes.string,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
+  listType: PropTypes.string.isRequired,
 };
 
-export default PostListItem;
+export default ListItem;
