@@ -14,11 +14,16 @@ import List from '../../../App/components/ListPage/List';
 // Import Actions
 import { fetchPost } from '../../PostActions';
 import { toggleAddComment } from '../../../App/AppActions';
-import { addCommentRequest, deleteCommentRequest, fetchComments } from '../../../Comment/CommentActions';
+import {
+  addCommentRequest,
+  deleteCommentRequest,
+  editCommentRequest,
+  fetchComments,
+} from '../../../Comment/CommentActions';
 
 // Import Selectors
 import { getPost } from '../../PostReducer';
-import { getShowAddComment } from '../../../App/AppReducer';
+import { getEditData, getIsEdit, getShowAddComment } from '../../../App/AppReducer';
 import { getComments } from '../../../Comment/CommentReducer';
 import { elementTypes } from '../../../../elementTypes';
 
@@ -29,8 +34,24 @@ class PostDetailPage extends Component {
 
   handleDeleteComment = comment => {
     if (confirm('Do you want to delete this comment')) { // eslint-disable-line
-      this.props.dispatch(deleteCommentRequest(this.props.post.cuid, comment.commentCuid));
+      this.props.dispatch(deleteCommentRequest(comment.commentCuid));
     }
+  };
+
+  handleOpenEditComment = (editData) => {
+    this.props.dispatch(toggleAddComment(true, editData));
+  };
+
+  handleEditComment = (updatedEditData) => {
+    this.props.dispatch(editCommentRequest({
+      _id: this.props.editData._id,
+      commentCuid: this.props.editData.commentCuid,
+      name: this.props.editData.name,
+      slug: this.props.editData.slug,
+      content: this.props.editData.content,
+      title: this.props.editData.title,
+      ...updatedEditData,
+    }));
   };
 
   handleAddComment = (comment) => {
@@ -42,14 +63,25 @@ class PostDetailPage extends Component {
     return (
       <div>
         <Helmet title={this.props.post.title} />
-        <CommentCreateWidget addComment={this.handleAddComment} showAddComment={this.props.showAddComment} />
+        <CommentCreateWidget
+          isEdit={this.props.isEdit}
+          editData={this.props.editData}
+          editComment={this.handleEditComment}
+          addComment={this.handleAddComment}
+          showAddComment={this.props.showAddComment}
+        />
         <div className={`${styles['single-post']} ${styles['post-detail']}`}>
           <h3 className={styles['post-title']}>{this.props.post.title}</h3>
           <p className={styles['author-name']}><FormattedMessage id="by" /> {this.props.post.name}</p>
           <p className={styles['post-desc']}>{this.props.post.content}</p>
         </div>
         <h3 className={styles['comments-title']}>Comments</h3>
-        <List listType={elementTypes.COMMENT} handleDelete={this.handleDeleteComment} data={this.props.comments} />
+        <List
+          listType={elementTypes.COMMENT}
+          handleDelete={this.handleDeleteComment}
+          handleEdit={this.handleOpenEditComment}
+          data={this.props.comments}
+        />
       </div>
     );
   }
@@ -64,6 +96,8 @@ PostDetailPage.need = [params => {
 function mapStateToProps(state, props) {
   return {
     comments: getComments(state),
+    isEdit: getIsEdit(state),
+    editData: getEditData(state),
     post: getPost(state, props.params.cuid),
     showAddComment: getShowAddComment(state),
   };
@@ -78,6 +112,8 @@ PostDetailPage.propTypes = {
     cuid: PropTypes.string.isRequired,
   }).isRequired,
   comments: PropTypes.array.isRequired,
+  isEdit: PropTypes.bool,
+  editData: PropTypes.object,
   showAddComment: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

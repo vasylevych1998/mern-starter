@@ -1,21 +1,29 @@
-import { ADD_COMMENT, ADD_COMMENTS, DELETE_COMMENT } from './CommentActions';
+import { ADD_COMMENT, ADD_COMMENTS, DELETE_COMMENT, EDIT_COMMENT } from './CommentActions';
 
 // Initial State
 const initialState = { data: [] };
 
 const CommentReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_COMMENT :
+    case ADD_COMMENT:
       return {
         data: [action.comment, ...state.data],
       };
 
-    case ADD_COMMENTS :
+    case ADD_COMMENTS:
       return {
         data: action.comments,
       };
 
-    case DELETE_COMMENT :
+    // eslint-disable-next-line
+    case EDIT_COMMENT:
+      const newData = state.data.filter(comment => comment.commentCuid !== action.comment.commentCuid);
+      newData.push(action.comment);
+
+      return {
+        data: newData,
+      };
+    case DELETE_COMMENT:
       return {
         data: state.data.filter(comment => comment.commentCuid !== action.commentCuid),
       };

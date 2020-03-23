@@ -9,8 +9,9 @@ export function toggleAddPost() {
   };
 }
 
-export function toggleAddComment() {
+export function toggleAddComment(isEdit = false, editData = {}) {
   return {
     type: TOGGLE_ADD_COMMENT,
+    payload: { isEdit, editData },
   };
 }

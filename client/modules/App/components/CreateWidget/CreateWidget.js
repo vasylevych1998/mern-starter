@@ -4,7 +4,7 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 
 // Import Style
 import styles from './CreateWidget.css';
-import { elementTypes } from "../../../../elementTypes";
+import { elementTypes } from '../../../../elementTypes';
 
 export const fieldTypes = {
   INPUT: 'INPUT',
@@ -12,26 +12,36 @@ export const fieldTypes = {
 };
 
 export class CreateWidget extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  getEditValue = (key) => (this.props.isEdit ? this.props.editData[key] : '')
+
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value });
+  };
+
   handleSubmit = () => {
-    if (Object.values(this.refs).every(value => value)) {
-      const submitData = {};
-      Object.entries(this.refs).forEach(([refKey, refValue]) => {
-        submitData[refKey] = refValue.value;
-      });
-      this.props.onSubmit(submitData);
-      Object.keys(this.refs).forEach(refKey => {
-        this.refs[refKey].value = '';
-      });
-    }
+    const submitData = this.state;
+    this.props.onSubmit(submitData);
+    const updatedState = {};
+    Object.keys(this.state).forEach(refKey => {
+      updatedState[refKey] = '';
+    });
+    this.setState({ ...updatedState });
   };
 
   renderFields = () => (
-    this.props.fields.map(({ type, name, ref }) => {
+    this.props.fields.map(({ type, name, key }) => {
       const fieldProps = {
+        value: this.state[key] || (this.state[key] === '' ? this.state[key] : this.getEditValue(key)),
         placeholder: this.props.intl.messages[name],
         className: styles['form-field'],
-        ref,
-        key: `${ref}-${name}`,
+        name: key,
+        key: `${key}-${name}`,
+        onChange: this.handleChange,
       };
 
       switch (type) {
@@ -77,6 +87,8 @@ CreateWidget.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   fields: PropTypes.array.isRequired,
   showForm: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool,
+  editData: PropTypes.object,
   intl: intlShape.isRequired,
 };
 

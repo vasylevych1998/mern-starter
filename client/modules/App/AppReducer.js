@@ -5,6 +5,8 @@ import { TOGGLE_ADD_POST, TOGGLE_ADD_COMMENT } from './AppActions';
 const initialState = {
   showAddPost: false,
   showAddComment: false,
+  isEdit: false,
+  editData: {},
 };
 
 const AppReducer = (state = initialState, action) => {
@@ -18,7 +20,9 @@ const AppReducer = (state = initialState, action) => {
     case TOGGLE_ADD_COMMENT:
       return {
         ...state,
-        showAddComment: !state.showAddComment,
+        isEdit: action.payload.isEdit,
+        editData: action.payload.editData,
+        showAddComment: action.payload.isEdit || !state.showAddComment,
       };
 
     default:
@@ -31,6 +35,8 @@ const AppReducer = (state = initialState, action) => {
 // Get showAddPost
 export const getShowAddPost = state => state.app.showAddPost;
 export const getShowAddComment = state => state.app.showAddComment;
+export const getIsEdit = state => state.app.isEdit;
+export const getEditData = state => state.app.editData;
 
 // Export Reducer
 export default AppReducer;

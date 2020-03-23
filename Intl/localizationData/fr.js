@@ -9,6 +9,7 @@ export default {
     by: 'Par',
     deletePost: 'Supprimer le message',
     deleteComment: 'Delete Comment',
+    editComment: 'Edit Comment',
     createNewPost: 'Créer un nouveau message',
     createNewComment: 'Create new comment',
     authorName: 'Nom de l\'auteur',

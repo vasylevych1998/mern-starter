@@ -9,10 +9,10 @@ function List(props) {
   let key;
   switch (props.listType) {
     case elementTypes.POST:
-      key = 'cuid'
+      key = 'cuid';
       break;
     case elementTypes.COMMENT:
-      key = 'commentCuid'
+      key = 'commentCuid';
       break;
     default:
   }
@@ -26,6 +26,7 @@ function List(props) {
             post={listItem}
             key={listItem[key]}
             onDelete={() => props.handleDelete(listItem)}
+            onEdit={() => props.handleEdit(listItem)}
           />
         ))
       }
@@ -44,6 +45,7 @@ List.propTypes = {
     postCuid: PropTypes.string,
   })).isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func,
   listType: PropTypes.string.isRequired,
 };
 

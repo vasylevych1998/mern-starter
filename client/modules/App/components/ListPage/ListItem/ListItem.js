@@ -9,9 +9,11 @@ import { elementTypes } from '../../../../../elementTypes';
 
 function ListItem(props) {
   let deleteMessageId;
+  let editMessageId;
   switch (props.listType) {
     case elementTypes.COMMENT:
       deleteMessageId = 'deleteComment';
+      editMessageId = 'editComment';
       break;
     case elementTypes.POST:
       deleteMessageId = 'deletePost';
@@ -29,6 +31,7 @@ function ListItem(props) {
       <p className={styles['author-name']}><FormattedMessage id="by" /> {props.post.name}</p>
       <p className={styles['post-desc']}>{props.post.content}</p>
       <p className={styles['post-action']}><a href="#" onClick={props.onDelete}><FormattedMessage id={deleteMessageId} /></a></p>
+      {editMessageId && <p className={styles['post-action']}><a href="#" onClick={props.onEdit}><FormattedMessage id={editMessageId} /></a></p>}
       <hr className={styles.divider} />
     </div>
   );
@@ -45,6 +48,7 @@ ListItem.propTypes = {
     postCuid: PropTypes.string,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
   listType: PropTypes.string.isRequired,
 };
 

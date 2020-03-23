@@ -49,13 +49,28 @@ export function addComment(req, res) {
 }
 
 /**
+ * Edit a comment
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function editComment(req, res) {
+  if (!req.body.comment.name || !req.body.comment.title || !req.body.comment.content) {
+    res.status(403).end();
+  }
+  Comment.findOneAndUpdate({ _id: req.body.comment._id }, { ...req.body.comment }, { new: true }, (err, saved) => {
+    res.json({ comment: saved });
+  });
+}
+
+/**
  * Delete a comment
  * @param req
  * @param res
  * @returns void
  */
 export function deleteComment(req, res) {
-  Comment.findOne({ commentCuid: req.params.commentCuid, postCuid: req.params.postCuid }).exec((err, comment) => {
+  Comment.findOne({ commentCuid: req.params.commentCuid }).exec((err, comment) => {
     if (err) {
       res.status(500).send(err);
     }

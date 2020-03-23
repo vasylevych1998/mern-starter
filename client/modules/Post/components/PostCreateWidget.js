@@ -8,17 +8,17 @@ export class PostCreateWidget extends Component {
     {
       type: fieldTypes.INPUT,
       name: 'authorName',
-      ref: 'name',
+      key: 'name',
     },
     {
       type: fieldTypes.INPUT,
       name: 'postTitle',
-      ref: 'title',
+      key: 'title',
     },
     {
       type: fieldTypes.TEXTAREA,
       name: 'postContent',
-      ref: 'content',
+      key: 'content',
     },
   ]);
 
